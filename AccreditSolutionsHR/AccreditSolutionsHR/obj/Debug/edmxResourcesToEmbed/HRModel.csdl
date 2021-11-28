@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="HRModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="HRModelContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Employees" EntityType="HRModel.Employee" />
+    <EntitySet Name="Departments" EntityType="HRModel.Department" />
+    <AssociationSet Name="EmployeeDepartment" Association="HRModel.EmployeeDepartment">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Department" EntitySet="Departments" />
+    </AssociationSet>
+    <EntitySet Name="Status" EntityType="HRModel.Status" />
+    <AssociationSet Name="StatusEmployee" Association="HRModel.StatusEmployee">
+      <End Role="Status" EntitySet="Status" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <FunctionImport Name="sp_GetEmployees">
+      <Parameter Name="page" Mode="In" Type="Int32" />
+      <Parameter Name="size" Mode="In" Type="Int32" />
+      <Parameter Name="sort" Mode="In" Type="String" />
+      <Parameter Name="totalrow" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Department" Relationship="HRModel.EmployeeDepartment" FromRole="Employee" ToRole="Department" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+    <Property Name="EmployeeNumber" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Status" Relationship="HRModel.StatusEmployee" FromRole="Employee" ToRole="Status" />
+    <Property Name="StatusId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Employees" Relationship="HRModel.EmployeeDepartment" FromRole="Department" ToRole="Employee" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <Association Name="EmployeeDepartment">
+    <End Type="HRModel.Employee" Role="Employee" Multiplicity="*" />
+    <End Type="HRModel.Department" Role="Department" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Status">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Employees" Relationship="HRModel.StatusEmployee" FromRole="Status" ToRole="Employee" />
+  </EntityType>
+  <Association Name="StatusEmployee">
+    <End Type="HRModel.Status" Role="Status" Multiplicity="1" />
+    <End Type="HRModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

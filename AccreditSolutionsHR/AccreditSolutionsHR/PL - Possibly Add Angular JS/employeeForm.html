@@ -1,0 +1,39 @@
+﻿
+<div ng-controller="editController" class="container-fluid">
+    <div class="mx-auto">
+        <h3>Add New Employee</h3>
+    </div>
+    <form ng-submit="saveEmployee()">
+        <div class="container">
+            <div class="row pad-row">
+                <input ng-model="employee.FirstName" type="text" class="form-control" placeholder="First Name">
+            </div>
+            <div class="row pad-row">
+                <input ng-model="employee.LastName" type="text" class="form-control" placeholder="Last Name">
+            </div>
+            <div class="row pad-row">
+                <input ng-model="employee.Email" type="text" class="form-control" placeholder="Email">
+            </div>
+            <div class="row pad-row">
+                <input ng-model="employee.DOB" class="form-control" type="date" ng-init="model=(employee.DOB | date:'dd-MM-yyyy')" />
+            </div>
+            <div class="row pad-row">
+                <select ng-model="employee.Department" class="form-control" ng-options="x.name  for department in departments"></select>
+            </div>
+            <div class="row pad-row">
+                <select ng-model="employee.Status" class="form-control" ng-options="x.name for x in statuses"></select>
+            </div>
+            <div class="row pad-row">
+                <input ng-model="employee.EmployeeNumber" type="text" class="form-control" placeholder="Employee Number">
+            </div>
+
+            <div class="row pad-row">
+                <input type="submit" class="btn btn-primary" placeholder="Save">
+            </div>
+        </div>
+    </form>
+    <pre>user = {{employee | json}}</pre>
+</div>
+
+
+<script src="~/PL/Edit.js"></script>

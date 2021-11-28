@@ -1,0 +1,83 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+<div class="container">
+    <div class="row">
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    </div>
+    <div class="row">
+        <p>Filter Status: </p>
+    </div>
+    <div class="row">
+        @foreach (var status in ViewBag.Statuses)
+        {
+            @status.Name <input type="checkbox" class="cbStatus" id="@status.Id" name="@status.Id" style="margin-right: 20pt;" />
+        }
+    </div>
+    <br />
+    <div class="row">
+        <p>Filter Department: </p>
+    </div>
+    <div class="row">
+        @foreach (var department in ViewBag.Departments)
+        {
+            @department.Name <input type="checkbox" class="cbDepartment" id="@department.Id" name="@department.Id" style="margin-right: 20pt;" />
+        }
+    </div>
+    <br />
+    <div class="row">
+        <button class="btn btn-primary">Reset Filters</button>
+    </div>
+    <br />
+</div>
+
+<div id="employees"></div>
+
+
+<script>
+
+    var filters =
+    {
+        departmentIds: [],
+        statusIds: [],
+        resultsPerPage: 10,
+        page: 1,
+        orderColumn: 0,
+        orderDirection: 0
+    };
+
+    function updateArray(array, value, include) {
+        var index = array.indexOf(value);
+
+        if (index === -1 && include) {
+            array.push(value);
+        } else {
+            if (!include) {
+                array.splice(index, 1);
+            }
+        }
+    }
+
+
+    $(".cbDepartment").change(function () {
+        updateArray(filters.departmentIds, this.id, this.checked);
+        loadPartial();
+    });
+
+    $(".cbStatus").change(function () {
+        updateArray(filters.statusIds, this.id, this.checked);
+        loadPartial();
+    });
+
+    function loadPartial() {
+        $('#employees').load('/Employees/GetEmployeePartial', filters);
+    };
+
+    loadPartial();
+
+</script>
